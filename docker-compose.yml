@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  webserver:
+    image: gbarretto/cybereason:webserver
+    build: webserver
+    container_name: webserver
+    ports:
+      - 8888:8888
+
+  ldap:
+    image: gbarretto/cybereason:ldap-persistent
+    build: ldap-persistent
+    container_name: ldap-persistent
+    env_file:
+     - ./var.env
+    ports:
+      - 1389:1389
