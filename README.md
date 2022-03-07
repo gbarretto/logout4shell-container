@@ -16,14 +16,13 @@ More information regarding these tools can be found on [Cybereason Logout4Shell]
 
 ## How Logout4Shell Container works
 
-The Logout4Shell Container is multi-container application consisting of the Cybereason Logout4Shell webserver which hosts the Transient and Persistent payloads and the ldap server which enables communication to the webserver through the lookup. Once the Logout4shell container is deployed either locally or externally and inbound connections are whitelisted between the Logout4shell container and vulnerable server on ports 1389 and 8888, you can then SSH into the container and execute a curl command to the vulnerable server with an appropriate HTTP header. This command initiates the lookup to the ldap server which will then redirect to the webserver to deliver the payload.
+The Logout4Shell Container is an application consisting of the Cybereason Logout4Shell webserver and LDAP server. When a JNDI lookup with an appropriate HTTP header is sent to the vulnearble app, log4j interpolates the string and queries the LDAP server. The LDAP server then provides directory information for the Java class which is hosted on the webserver through the Transient and Persistent payloads. The payload remediates the log4j vulnerabilty by changing the FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS value from False to True. A quick warning that I haven't used this remediation in a production environment. More information regarding the potential impact it may have in a production environment can be read in Cybereason's documentation.
 
 ## POC Test Environment
 
 - Logout4Shell Container deployed via Docker on an Amazon Linux 2 AMI (HVM) - Kernel 5.10, 8 GB General Purpose SSD Volume Type, t2.micro, EC2 instance.
 - FullHunt log4j scan deployed via Docker on an Amazon Linux 2 AMI (HVM) - Kernel 5.10, 8 GB General Purpose SSD Volume Type, t2.micro, EC2 instance.
 - Vulnerable app deployed via Docker on an Amazon Linux 2 AMI (HVM) - Kernel 5.10, 8 GB General Purpose SSD Volume Type, t2.micro, EC2 instance. More information regarding this vulnerable app can be found on [Log4Shell sample vulnerable application]( https://github.com/christophetd/log4shell-vulnerable-app/blob/main/README.md).
-
 
 ## Test Environment Setup
 
