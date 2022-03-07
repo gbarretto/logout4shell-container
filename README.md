@@ -16,7 +16,7 @@ More information regarding these tools can be found on [Cybereason Logout4Shell]
 
 ## How Logout4Shell Container works
 
-The Logout4Shell Container is an application consisting of the Cybereason Logout4Shell webserver and LDAP server. When a JNDI lookup with an appropriate HTTP header is sent to the vulnearble app, log4j interpolates the string and queries the LDAP server. The LDAP server then provides directory information for the Java class which is hosted on the webserver through the Transient and Persistent payloads. The payload remediates the log4j vulnerabilty by changing the FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS value from False to True. A quick warning that I haven't used this remediation in a production environment. More information regarding the potential impact it may have in a production environment can be read in Cybereason's documentation.
+The Logout4Shell Container is an application consisting of the Cybereason Logout4Shell webserver and LDAP server. When a JNDI lookup with an appropriate HTTP header is sent to the vulnerable app, log4j interpolates the string and queries the LDAP server. The LDAP server then provides directory information for the Java class which is hosted on the webserver through the Transient and Persistent payloads. The payload remediates the log4j vulnerabilty by changing the FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS value from False to True. A quick warning that I haven't used this remediation in a production environment. More information regarding the potential impact it may have in a production environment can be read in Cybereason's documentation.
 
 ## POC Test Environment
 
