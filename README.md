@@ -105,7 +105,7 @@ sudo docker build -t log4j-scan .
 ```
 docker run --name vulnerable-app --rm -p 443:8080 ghcr.io/christophetd/log4shell-vulnerable-app
 ```
-Also make sure this container isn't publicly accessible.
+- You want to make sure this container isn't publicly accessible.
 
 ### Adjust Security Group for Logout4Shell Container
 1. In the AWS Management Console adjust the security group for the Logout4Shell Container to allow inbound connection from the IP address of the Vulnerable App on ports 1389 and 8888.
