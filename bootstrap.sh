@@ -11,9 +11,3 @@ systemctl enable docker
 sudo usermod -a -G docker ec2-user
 #Install git
 yum install -y git
-#Install latest version of docker compose
-curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#Change permissions
-chmod +x /usr/local/bin/docker-compose
-#Clone Repository
-git clone https://github.com/glennbarretto/logout4shell-container.git
