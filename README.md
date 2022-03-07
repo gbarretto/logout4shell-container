@@ -111,7 +111,7 @@ Also make sure this container isn't publicly accessible.
 1. In the AWS Management Console adjust the security group for the Logout4Shell Container to allow inbound connection from the IP address of the Vulnerable App on ports 1389 and 8888.
 
 ## How it works
-1. Let's first vaildate that the Vulernable app is indeed vulnerable. From the FullHunt log4j scan terminal window, execute the command below replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulmerable app instance.
+1. Let's first vaildate that the Vulnernable app is indeed vulnerable. From the FullHunt log4j scan terminal window, execute the command below replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulnerable app instance.
 ```
 sudo docker run -it --rm log4j-scan -u http://<Vulnerable_App_IP_Address>:443
 ```
