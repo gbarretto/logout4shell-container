@@ -38,7 +38,7 @@ system reboot
 systemctl enable docker
 yum install -y git
 ```
-2. Install the latest version of Docker Compose:
+2. SSH into your instance and install the latest version of Docker Compose:
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 ```
