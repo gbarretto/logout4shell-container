@@ -50,11 +50,11 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```
 git clone https://github.com/gbarretto/logout4shell-container.git
 ```
-5. Change directory to logout4shell-container.
+5. Change directory to logout4shell-container:
 ```
 cd logout4shell-container
 ```
-6. Open var.env in GNU nano to edit.
+6. Open var.env in GNU nano to edit:
 ```
 nano var.env
 ```
@@ -92,7 +92,7 @@ Creating ldap-persistent ... done
 
 ### FullHunt log4j scan
 1. Launch an EC2 instance with the same user data script from above.
-2. SSH into your instance in a new terminal window and run the commands below to build the FullHunt log4j scan.
+2. SSH into your instance in a new terminal window and run the commands below to build the FullHunt log4j scan:
 ```
 git clone https://github.com/fullhunt/log4j-scan.git
 cd log4j-scan
@@ -101,7 +101,7 @@ sudo docker build -t log4j-scan .
 
 ### Vulnerable app
 1. Launch an EC2 instance with the same user data script from above. Adjust the security group to allow inbound connection from the IP address of the Logout4Shell container on ports 1389, 8888 and 443 and from the IP address of the FullHunt log4j scan on port 443.
-3. SSH into your instance in a new terminal window and run the command below to run the vulnerable app via Docker.
+3. SSH into your instance in a new terminal window and run the command below to run the vulnerable app via Docker:
 ```
 docker run --name vulnerable-app --rm -p 443:8080 ghcr.io/christophetd/log4shell-vulnerable-app
 ```
@@ -111,7 +111,7 @@ docker run --name vulnerable-app --rm -p 443:8080 ghcr.io/christophetd/log4shell
 1. In the AWS Management Console adjust the security group for the Logout4Shell Container to allow inbound connection from the IP address of the Vulnerable App on ports 1389 and 8888.
 
 ## How it works
-1. Let's first vaildate that the Vulnerable app is indeed vulnerable. From the FullHunt log4j scan terminal window, execute the command below replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulnerable app instance.
+1. Let's first vaildate that the Vulnerable app is indeed vulnerable. From the FullHunt log4j scan terminal window, execute the command below replacing ```<Vulnerable_App_IP_Address>``` with the IP address of the Vulnerable app instance:
 ```
 sudo docker run -it --rm log4j-scan -u http://<Vulnerable_App_IP_Address>:443
 ```
